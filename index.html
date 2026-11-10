@@ -133,7 +133,37 @@ button{cursor:pointer}
   margin-top:20px;
   line-height:1.5;
 }
+.account-menu{
+  position:relative;
+}
 
+.account-dropdown{
+  position:absolute;
+  right:0;
+  top:48px;
+  width:170px;
+  background:white;
+  border:1px solid #dbe4ef;
+  border-radius:10px;
+  box-shadow:0 8px 25px #0002;
+  z-index:20;
+  padding:7px;
+}
+
+.account-dropdown button{
+  display:block;
+  width:100%;
+  text-align:left;
+  color:#123b63;
+  background:white;
+  border:0;
+  padding:12px;
+  border-radius:7px;
+}
+
+.account-dropdown button:hover{
+  background:#eaf3fc;
+}
 /* MARKETPLACE */
 header{
   background:var(--navy);
@@ -338,7 +368,14 @@ footer{
     <div class="header-actions">
       <span id="userStatus">Guest</span>
       <button type="button" onclick="openCart()">Cart (<span id="cartCount">0</span>)</button>
-      <button type="button" onclick="returnToWelcome()">Account</button>
+      <div class="account-menu">
+  <button type="button" onclick="toggleAccountMenu()">👤 Account ▾</button>
+
+  <div id="accountDropdown" class="account-dropdown hidden">
+    <button type="button" onclick="returnToWelcome()">My Account</button>
+    <button type="button" onclick="logout()">🚪 Sign Out</button>
+  </div>
+</div>
     </div>
   </header>
 
@@ -605,7 +642,15 @@ onAuthStateChanged(auth,async(user)=>{
   }
 });
 
+function toggleAccountMenu(){
+  document.getElementById("accountDropdown")
+    .classList.toggle("hidden");
+}
+
 async function logout(){
+  document.getElementById("accountDropdown")
+    .classList.add("hidden");
+
   await signOut(auth);
 }
 
@@ -735,67 +780,4 @@ function updateCart(){
 
     controls.append(minus,quantity,plus,document.createElement("br"),remove);
     row.append(details,controls);
-    container.appendChild(row);
-  });
-
-  document.getElementById("cartTotal").textContent="GH₵"+total.toFixed(2);
-}
-
-function changeQuantity(id,change){
-  const item=cart.find(product=>product.id===id);
-  if(!item) return;
-  item.quantity+=change;
-  if(item.quantity<=0) cart=cart.filter(product=>product.id!==id);
-  saveCart();
-  updateCart();
-}
-
-function removeFromCart(id){
-  cart=cart.filter(product=>product.id!==id);
-  saveCart();
-  updateCart();
-}
-
-function openCart(){
-  document.getElementById("cartPanel").classList.remove("hidden");
-}
-
-function closeCart(){
-  document.getElementById("cartPanel").classList.add("hidden");
-}
-
-function checkout(){
-  alert("Checkout is not available yet. We are still building secure ordering and payment features.");
-}
-
-/* FRIENDLY ERROR MESSAGES */
-function friendlyError(error){
-  const codes={
-    "auth/email-already-in-use":"This email already has an account. Please sign in.",
-    "auth/invalid-email":"Please enter a valid email address.",
-    "auth/weak-password":"Please choose a stronger password with at least 6 characters.",
-    "auth/user-not-found":"No account was found with that email.",
-    "auth/wrong-password":"The password is incorrect. Please try again.",
-    "auth/invalid-credential":"Email or password is incorrect.",
-    "auth/network-request-failed":"Connection problem. Check your internet and try again.",
-    "permission-denied":"Your account profile could not be saved. Please contact support."
-  };
-  return codes[error.code] || "Something went wrong. Please try again. ("+(error.code||"unknown")+")";
-}
-
-/* MAKE FUNCTIONS AVAILABLE TO BUTTONS */
-Object.assign(window,{
-  showLogin,
-  showRegister,
-  browseAsGuest,
-  returnToWelcome,
-  openCart,
-  closeCart,
-  filterCategory,
-  searchProducts,
-  logout
-});
-</script>
-
-</body>
-</html>
+  

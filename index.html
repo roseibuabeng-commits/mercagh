@@ -370,11 +370,25 @@ footer{
       <div class="account-menu">
   <button type="button" onclick="toggleAccountMenu()">👤 Account ▾</button>
 
-  <div id="accountDropdown" class="account-dropdown hidden">
-  <button type="button" onclick="logout()">
-    🚪 Sign Out
-  </button>
-  </div>
+#accountDropdown button {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background: #ffffff !important;
+  color: #123b63 !important;
+  font-size: 15px !important;
+  font-weight: bold;
+  text-align: left;
+  border: none;
+  border-radius: 8px;
+  opacity: 1;
+  visibility: visible;
+  cursor: pointer;
+}
+
+#accountDropdown button:hover {
+  background: #eaf3fc !important;
+}
     <button type="button" onclick="returnToWelcome()">My Account</button>
     <button type="button" onclick="logout()">🚪 Sign Out</button>
   </div>
